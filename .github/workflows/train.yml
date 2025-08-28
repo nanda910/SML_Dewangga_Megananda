@@ -1,0 +1,79 @@
+name: ML Training Pipeline - Dewangga Megananda
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Set up MLflow tracking
+      run: |
+        mkdir -p mlruns
+        export MLFLOW_TRACKING_URI=./mlruns
+
+    - name: Run preprocessing
+      run: |
+        cd Eksperimen_SML_Dewangga_Megananda/preprocessing
+        python automate_Dewangga_Megananda.py --input dataset_preprocessing/sample_data.csv --output dataset_preprocessing/
+
+    - name: Run model training
+      run: |
+        cd Membangun_model
+        python modelling.py
+
+    - name: Run hyperparameter tuning
+      run: |
+        cd Membangun_model
+        python modelling_tuning.py
+
+    - name: Upload MLflow artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: mlflow-artifacts
+        path: |
+          mlruns/
+          Membangun_model/*.log
+          Eksperimen_SML_Dewangga_Megananda/preprocessing/*.log
+
+    - name: Upload model artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: model-artifacts
+        path: |
+          Membangun_model/*.png
+          Membangun_model/*.csv
+          Eksperimen_SML_Dewangga_Megananda/preprocessing/dataset_preprocessing/
+
+    - name: Create training summary
+      run: |
+        echo "# Training Summary" > training_summary.md
+        echo "- Preprocessing: ✅ Completed" >> training_summary.md
+        echo "- Model Training: ✅ Completed" >> training_summary.md
+        echo "- Hyperparameter Tuning: ✅ Completed" >> training_summary.md
+        echo "- Date: $(date)" >> training_summary.md
+        cat training_summary.md
+
+    - name: Upload training summary
+      uses: actions/upload-artifact@v3
+      with:
+        name: training-summary
+        path: training_summary.md
