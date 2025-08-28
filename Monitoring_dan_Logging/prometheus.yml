@@ -1,0 +1,52 @@
+# Prometheus Configuration - Dewangga Megananda
+# Proyek Akhir Machine Learning Dicoding - Skilled Level
+
+global:
+  scrape_interval: 15s  # Scrape metrics setiap 15 detik
+  evaluation_interval: 15s  # Evaluate rules setiap 15 detik
+
+rule_files:
+  # - "alert_rules.yml"  # Uncomment jika ada alert rules
+
+scrape_configs:
+  # ML Service Prometheus Exporter
+  - job_name: 'ml_service_dewangga'
+    static_configs:
+      - targets: ['localhost:8001']  # Port dimana prometheus_exporter.py berjalan
+        labels:
+          service: 'ml_inference'
+          owner: 'dewangga_megananda'
+          project: 'dicoding_ml_skilled'
+
+  # Flask Inference API (jika ingin monitor juga)
+  - job_name: 'ml_inference_api'
+    static_configs:
+      - targets: ['localhost:5000']  # Port dimana inference.py berjalan
+        labels:
+          service: 'ml_api'
+          owner: 'dewangga_megananda'
+          project: 'dicoding_ml_skilled'
+    metrics_path: '/metrics'  # Endpoint metrics di Flask app
+
+  # Prometheus itself (untuk monitoring Prometheus)
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+          owner: 'dewangga_megananda'
+
+# Alert Rules Configuration (opsional)
+# Uncomment dan buat file alert_rules.yml jika ingin menggunakan alerting
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#       - targets: ['localhost:9093']
+
+# Remote write (opsional - untuk menyimpan metrics ke storage eksternal)
+# remote_write:
+#   - url: "http://localhost:9201/write"
+
+# Remote read (opsional - untuk membaca metrics dari storage eksternal)
+# remote_read:
+#   - url: "http://localhost:9201/read"

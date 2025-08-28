@@ -1,0 +1,148 @@
+{
+  "dashboard": {
+    "title": "Dewangga Megananda - ML Model Monitoring",
+    "description": "Dashboard monitoring untuk model machine learning Dicoding Skilled Level",
+    "tags": [
+      "ml",
+      "monitoring",
+      "dicoding",
+      "dewangga"
+    ],
+    "timezone": "UTC",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Model Accuracy",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "ml_model_accuracy{model_name=\"Dewangga_RF_Model\"}",
+            "legendFormat": "Accuracy"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percentunit",
+            "decimals": 2
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "id": 2,
+        "title": "Model F1 Score",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "ml_model_f1_score{model_name=\"Dewangga_RF_Model\"}",
+            "legendFormat": "F1 Score"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percentunit",
+            "decimals": 2
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        }
+      },
+      {
+        "id": 3,
+        "title": "Request Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(ml_inference_requests_total{model_name=\"Dewangga_RF_Model\", status=\"success\"}[5m])",
+            "legendFormat": "Success Requests/sec"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 8
+        }
+      },
+      {
+        "id": 4,
+        "title": "Response Time",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(ml_inference_request_duration_seconds_bucket{model_name=\"Dewangga_RF_Model\"}[5m]))",
+            "legendFormat": "95th Percentile"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "seconds"
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 16
+        }
+      },
+      {
+        "id": 5,
+        "title": "Service Uptime",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "ml_model_uptime_seconds{model_name=\"Dewangga_RF_Model\"} / 3600",
+            "legendFormat": "Uptime Hours"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "hours",
+            "decimals": 1
+          }
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 24
+        }
+      },
+      {
+        "id": 6,
+        "title": "Total Requests",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(ml_inference_requests_total{model_name=\"Dewangga_RF_Model\"})",
+            "legendFormat": "Total Requests"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 24
+        }
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "refresh": "30s",
+    "schemaVersion": 38,
+    "version": 1,
+    "links": []
+  }
+}

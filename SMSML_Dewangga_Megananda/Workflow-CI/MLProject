@@ -1,0 +1,36 @@
+# MLProject Configuration - Dewangga Megananda
+# Proyek Akhir Machine Learning Dicoding - Skilled Level
+
+name: dewangga_megananda_ml_project
+
+conda_env: conda.yaml
+
+entry_points:
+  preprocess:
+    command: "cd Eksperimen_SML_Dewangga_Megananda/preprocessing && python automate_Dewangga_Megananda.py --input dataset_preprocessing/sample_data.csv --output dataset_preprocessing/"
+
+  train:
+    command: "cd Membangun_model && python modelling.py"
+    parameters:
+      n_estimators: {type: int, default: 100}
+      max_depth: {type: int, default: 10}
+      random_state: {type: int, default: 42}
+
+  tune:
+    command: "cd Membangun_model && python modelling_tuning.py"
+    parameters:
+      cv_folds: {type: int, default: 5}
+      random_state: {type: int, default: 42}
+
+  serve:
+    command: "cd Monitoring_dan_Logging && python inference.py"
+    parameters:
+      host: {type: str, default: "0.0.0.0"}
+      port: {type: int, default: 5000}
+      model_path: {type: str, default: "../Membangun_model"}
+
+  monitor:
+    command: "cd Monitoring_dan_Logging && python prometheus_exporter.py"
+    parameters:
+      port: {type: int, default: 8001}
+      model_path: {type: str, default: "../Membangun_model"}
