@@ -46,7 +46,7 @@ jobs:
         python modelling_tuning.py
 
     - name: Upload MLflow artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: mlflow-artifacts
         path: |
@@ -55,7 +55,7 @@ jobs:
           Eksperimen_SML_Dewangga_Megananda/preprocessing/*.log
 
     - name: Upload model artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: model-artifacts
         path: |
@@ -73,7 +73,7 @@ jobs:
         cat training_summary.md
 
     - name: Upload training summary
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: training-summary
         path: training_summary.md
